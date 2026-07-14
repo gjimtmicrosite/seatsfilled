@@ -1196,6 +1196,30 @@ html,body{height:100%;overflow:hidden;}
   }
 </style>
 
+
+<style id="static-registration-style">
+  .registration-title{
+    margin-top: 4px;
+    font-size: clamp(13px, 1.05vw, 18px);
+    line-height: 1.2;
+    font-weight: 1000;
+    color: #0a2b63;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .course-card:nth-child(even) .registration-title{
+    color: #d45300;
+  }
+
+  @media (max-width:700px){
+    .registration-title{
+      font-size: 14px;
+      white-space: normal;
+    }
+  }
+</style>
+
 </head>
 <body>
   <main class="page">
@@ -1261,12 +1285,14 @@ html,body{height:100%;overflow:hidden;}
     const GOOGLE_SCRIPT_WEB_APP_URL =
       "https://script.google.com/macros/s/AKfycbxi3Cv9VAp6hWWOQ2r1AzxJdZyAqOowuMT4aGkOnXJQIRHOohq_thZI_56QUs3bWeI/exec";
 
+    // Registration is a static value from 1 to 10.
+    // Change only the registration numbers below whenever required.
     const programmes = [
-      { id: "bba",  name: "BBA",           icon: "🎓" },
-      { id: "bca",  name: "BCA",           icon: "⌨"  },
-      { id: "bcom", name: "B.Com (Hons.)", icon: "₹"  },
-      { id: "mba",  name: "MBA",           icon: "💼" },
-      { id: "mca",  name: "MCA",           icon: "⚙"  }
+      { id: "bba",  name: "BBA",           icon: "🎓", registration: 10 },
+      { id: "bca",  name: "BCA",           icon: "⌨",  registration: 8  },
+      { id: "bcom", name: "B.Com (Hons.)", icon: "₹",  registration: 5  },
+      { id: "mba",  name: "MBA",           icon: "💼", registration: 7  },
+      { id: "mca",  name: "MCA",           icon: "⚙",  registration: 9  }
     ];
 
     let counts = null;
@@ -1290,6 +1316,9 @@ html,body{height:100%;overflow:hidden;}
             <div class="seat-box">
               <div class="registered-title">Admission Confirmed</div>
               <div class="seat-number">${value}</div>
+              <div class="registration-title">
+                Registration - ${Math.max(1, Math.min(10, programme.registration))}
+              </div>
             </div>
 
             <div class="progress" style="--progress:100%"></div>
