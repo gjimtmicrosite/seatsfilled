@@ -5,6 +5,151 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gian Jyoti Admissions 2026</title>
   <style>
+    /* ===========================
+   PREMIUM ADMISSION NUMBER
+=========================== */
+
+.admission-number,
+.confirmed-count,
+.count-number,
+.counter {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 170px;
+    height: 170px;
+    margin: 15px auto 20px;
+
+    border-radius: 50%;
+
+    /* Premium Background */
+    background: radial-gradient(circle at 30% 30%,
+        #ffffff 0%,
+        #f7f9ff 45%,
+        #dbe8ff 100%);
+
+    /* Orange Ring */
+    border: 6px solid #ff6b00;
+
+    /* Premium Shadow */
+    box-shadow:
+        inset 0 8px 20px rgba(255,255,255,.95),
+        0 10px 25px rgba(0,0,0,.18),
+        0 0 20px rgba(255,107,0,.25);
+
+    font-size: 100px;
+    font-weight: 900;
+    font-family: "Poppins", sans-serif;
+
+    color: #0d2c73;
+
+    /* Text Stroke */
+    -webkit-text-stroke: 2px #ffffff;
+
+    /* 3D Effect */
+    text-shadow:
+        0px 2px 0px #06235e,
+        0px 4px 0px #041d50,
+        0px 8px 18px rgba(0,0,0,.28);
+
+    overflow: hidden;
+
+    transition: all .35s ease;
+}
+
+/* Glossy Shine */
+.admission-number::before,
+.confirmed-count::before,
+.count-number::before,
+.counter::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-40%;
+    left:-40%;
+
+    width:70%;
+    height:220%;
+
+    background:rgba(255,255,255,.45);
+
+    transform:rotate(30deg);
+
+    transition:.6s;
+}
+
+/* Outer Glow */
+.admission-number::after,
+.confirmed-count::after,
+.count-number::after,
+.counter::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:185px;
+    height:185px;
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,107,0,.35);
+
+    animation:pulseGlow 2s infinite;
+}
+
+/* Hover Effect */
+.admission-number:hover,
+.confirmed-count:hover,
+.count-number:hover,
+.counter:hover{
+
+    transform:translateY(-6px) scale(1.05);
+
+    box-shadow:
+        inset 0 8px 20px rgba(255,255,255,.95),
+        0 18px 35px rgba(0,0,0,.28),
+        0 0 30px rgba(255,107,0,.45);
+}
+
+.admission-number:hover::before,
+.confirmed-count:hover::before,
+.count-number:hover::before,
+.counter:hover::before{
+
+    left:140%;
+}
+
+/* Glowing Animation */
+
+@keyframes pulseGlow{
+
+    0%{
+
+        transform:scale(.92);
+        opacity:.35;
+
+    }
+
+    50%{
+
+        transform:scale(1.05);
+        opacity:.8;
+
+    }
+
+    100%{
+
+        transform:scale(.92);
+        opacity:.35;
+
+    }
+
+}
     :root{
       --navy:#071f4a;
       --navy-2:#0d376f;
