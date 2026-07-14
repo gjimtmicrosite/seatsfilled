@@ -1226,7 +1226,7 @@ html,body{height:100%;overflow:hidden;}
         <strong>DEMO / ILLUSTRATIVE COUNTER</strong>
         <span>These figures increase automatically for display testing and do not represent verified live admissions.</span>
       </div>
-      <div class="countdown-wrap"><span>Next automatic increase in</span><strong id="countdown">SYNCING</strong></div>
+     
       <div class="updated" id="updatedText"></div>
     </section>
 
@@ -1304,13 +1304,7 @@ html,body{height:100%;overflow:hidden;}
       updated.style.color = isError ? "#b42318" : "";
     }
 
-    function updateNextIncreaseDisplay() {
-      const indicator = document.getElementById("countdown");
-
-      if (!nextIncreaseAt) {
-        indicator.textContent = "SYNCING";
-        return;
-      }
+  
 
       const remaining = Math.max(0, nextIncreaseAt - Date.now());
       const totalSeconds = Math.ceil(remaining / 1000);
