@@ -1226,7 +1226,7 @@ html,body{height:100%;overflow:hidden;}
         <strong>DEMO / ILLUSTRATIVE COUNTER</strong>
         <span>These figures increase automatically for display testing and do not represent verified live admissions.</span>
       </div>
-      <div class="countdown-wrap"><span>Live Google Sheet Sync</span><strong id="countdown">ONLINE</strong></div>
+      <div class="countdown-wrap"><span>Next automatic increase in</span><strong id="countdown">SYNCING</strong></div>
       <div class="updated" id="updatedText"></div>
     </section>
 
@@ -1256,14 +1256,8 @@ html,body{height:100%;overflow:hidden;}
   
   
   
+  
   <script>
-    /*
-      STEP 1:
-      Deploy the supplied Code.gs as a Google Apps Script Web App.
-
-      STEP 2:
-      Paste the Web App URL below between the quotation marks.
-    */
     const GOOGLE_SCRIPT_WEB_APP_URL =
       "https://script.google.com/macros/s/AKfycbzraPi3N2NVsdmfGC9C9kcN17HNxa8I10k3dTq8hJ1qz62xUiyZLXnN7QWmEQD7SuY/exec";
 
@@ -1275,30 +1269,33 @@ html,body{height:100%;overflow:hidden;}
       { id: "mca",  name: "MCA",           icon: "⚙"  }
     ];
 
-    let counts = {
-      bba: 0,
-      bca: 0,
-      bcom: 0,
-      mba: 0,
-      mca: 0
-    };
+    let counts = null;
+    let nextIncreaseAt = null;
+    let isLoading = false;
 
     function renderCards() {
       const list = document.getElementById("courseList");
 
-      list.innerHTML = programmes.map(programme => `
-        <article class="course-card">
-          <div class="icon">${programme.icon}</div>
-          <div class="course-name">${programme.name}</div>
+      list.innerHTML = programmes.map(programme => {
+        const value =
+          counts && Number.isFinite(Number(counts[programme.id]))
+            ? Math.floor(Number(counts[programme.id]))
+            : "—";
 
-          <div class="seat-box">
-            <div class="registered-title">Registered Admissions</div>
-            <div class="seat-number">${counts[programme.id]}</div>
-          </div>
+        return `
+          <article class="course-card">
+            <div class="icon">${programme.icon}</div>
+            <div class="course-name">${programme.name}</div>
 
-          <div class="progress" style="--progress:100%"></div>
-        </article>
-      `).join("");
+            <div class="seat-box">
+              <div class="registered-title">Registered Admissions</div>
+              <div class="seat-number">${value}</div>
+            </div>
+
+            <div class="progress" style="--progress:100%"></div>
+          </article>
+        `;
+      }).join("");
     }
 
     function showStatus(message, isError = false) {
@@ -1307,20 +1304,37 @@ html,body{height:100%;overflow:hidden;}
       updated.style.color = isError ? "#b42318" : "";
     }
 
-    async function loadCountsFromGoogleSheet() {
-      if (
-        !GOOGLE_SCRIPT_WEB_APP_URL ||
-        GOOGLE_SCRIPT_WEB_APP_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE")
-      ) {
-        showStatus("Setup required: paste the Google Apps Script Web App URL in the HTML code.", true);
+    function updateNextIncreaseDisplay() {
+      const indicator = document.getElementById("countdown");
+
+      if (!nextIncreaseAt) {
+        indicator.textContent = "SYNCING";
         return;
       }
+
+      const remaining = Math.max(0, nextIncreaseAt - Date.now());
+      const totalSeconds = Math.ceil(remaining / 1000);
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+
+      indicator.textContent = `${minutes}:${seconds}`;
+    }
+
+    async function loadCountsFromGoogleSheet() {
+      if (isLoading) return;
+      isLoading = true;
 
       try {
         const separator = GOOGLE_SCRIPT_WEB_APP_URL.includes("?") ? "&" : "?";
         const response = await fetch(
-          GOOGLE_SCRIPT_WEB_APP_URL + separator + "action=get&t=" + Date.now(),
-          { cache: "no-store", redirect: "follow" }
+          GOOGLE_SCRIPT_WEB_APP_URL +
+            separator +
+            "action=get&t=" +
+            Date.now(),
+          {
+            cache: "no-store",
+            redirect: "follow"
+          }
         );
 
         if (!response.ok) {
@@ -1333,31 +1347,41 @@ html,body{height:100%;overflow:hidden;}
           throw new Error(data.message || "Invalid response");
         }
 
-        programmes.forEach(programme => {
-          const value = Number(data.counts[programme.id]);
-          counts[programme.id] =
-            Number.isFinite(value) && value >= 0 ? Math.floor(value) : 0;
-        });
+        counts = data.counts;
+        nextIncreaseAt = Number(data.nextIncreaseAt) || null;
 
         renderCards();
+        updateNextIncreaseDisplay();
 
-        const updatedTime = data.updatedAt || new Date().toLocaleString("en-IN");
-        showStatus("Last synced: " + updatedTime);
+        showStatus(
+          "Last synced: " +
+          (data.updatedAt || new Date().toLocaleString("en-IN"))
+        );
       } catch (error) {
         console.error(error);
+
         showStatus(
-          "Could not connect to Google Sheet. The previous displayed values remain visible.",
+          counts
+            ? "Connection interrupted. Showing the last successfully synced values."
+            : "Unable to connect to Google Sheet. Check the Apps Script deployment.",
           true
         );
+      } finally {
+        isLoading = false;
       }
     }
 
     renderCards();
+    updateNextIncreaseDisplay();
     loadCountsFromGoogleSheet();
 
-    // Refresh verified values from the Google Sheet every 30 seconds.
-    setInterval(loadCountsFromGoogleSheet, 30 * 1000);
+    // Check the central Google Sheet frequently.
+    setInterval(loadCountsFromGoogleSheet, 15 * 1000);
+
+    // Update the visible countdown every second.
+    setInterval(updateNextIncreaseDisplay, 1000);
   </script>
+
 
 
 
