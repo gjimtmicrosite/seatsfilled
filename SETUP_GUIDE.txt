@@ -1,0 +1,46 @@
+GJIMT GOOGLE SHEET COUNTER SETUP
+
+WHY 251 APPEARED
+The older testing script calculated every missed 2-minute interval and added all of
+them. Old browser values were also carried forward. This cloud version does not use
+those old browser counters.
+
+WHAT THIS VERSION DOES
+1. The large box contains only:
+   Registered Admissions
+   [number]
+2. The number is read from one central Google Sheet.
+3. Closing the browser, changing computers, refreshing, or restarting the kiosk does
+   not reset the number.
+4. Update the Google Sheet only when an actual registration is verified.
+5. Every kiosk refreshes the Sheet values automatically every 30 seconds.
+
+SETUP
+
+1. Create a blank Google Sheet.
+2. Copy its Sheet ID from:
+   https://docs.google.com/spreadsheets/d/SHEET_ID/edit
+3. Open Extensions > Apps Script.
+4. Delete the sample code and paste the contents of Code.gs.
+5. Replace PASTE_GOOGLE_SHEET_ID_HERE with your Sheet ID.
+6. Save the project.
+7. Select setupAdmissionsSheet from the function dropdown and click Run.
+8. Approve the requested Google permissions.
+9. In Apps Script, select Deploy > New deployment.
+10. Choose Web app.
+11. Execute as: Me.
+12. Who has access: Anyone.
+13. Deploy and copy the Web App URL.
+14. Open GJIMT_Google_Sheet_Registered_Admissions.html in a text editor.
+15. Replace:
+    PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE
+    with the copied Web App URL.
+16. Upload the edited HTML as index.html to GitHub Pages.
+
+To change a displayed value:
+Open the Admissions tab in the Google Sheet and update column B.
+The kiosk will show the new number within approximately 30 seconds.
+
+IMPORTANT
+This version intentionally does not create automatic fake registrations. It displays
+the centrally stored figures from the Sheet so the public kiosk can show verified data.
