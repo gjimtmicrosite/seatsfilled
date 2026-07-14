@@ -1265,7 +1265,7 @@ html,body{height:100%;overflow:hidden;}
       Paste the Web App URL below between the quotation marks.
     */
     const GOOGLE_SCRIPT_WEB_APP_URL =
-      "https://script.google.com/macros/s/AKfycbwyeXLNWWRGhl6Bkqat0RQ4keBdOFd7v3DT8Ytd0wEUotqrz0ZK075mNgI-vAQrGes/exec";
+      "https://script.google.com/macros/s/AKfycbzraPi3N2NVsdmfGC9C9kcN17HNxa8I10k3dTq8hJ1qz62xUiyZLXnN7QWmEQD7SuY/exec";
 
     const programmes = [
       { id: "bba",  name: "BBA",           icon: "🎓" },
@@ -1310,7 +1310,7 @@ html,body{height:100%;overflow:hidden;}
     async function loadCountsFromGoogleSheet() {
       if (
         !GOOGLE_SCRIPT_WEB_APP_URL ||
-        GOOGLE_SCRIPT_WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbwyeXLNWWRGhl6Bkqat0RQ4keBdOFd7v3DT8Ytd0wEUotqrz0ZK075mNgI-vAQrGes/exec")
+        GOOGLE_SCRIPT_WEB_APP_URL.includes("https://script.google.com/macros/s/AKfycbzraPi3N2NVsdmfGC9C9kcN17HNxa8I10k3dTq8hJ1qz62xUiyZLXnN7QWmEQD7SuY/exec")
       ) {
         showStatus("Setup required: paste the Google Apps Script Web App URL in the HTML code.", true);
         return;
